@@ -48,30 +48,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void guardarfirma(){
-
+    public void guardarfirma() {
         SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.NameDataBase, null, 1);
         SQLiteDatabase db = conexion.getWritableDatabase();
 
-        try{
+        try {
+            String descripcionText = descripcion.getText().toString();
+
+            // Validar que haya una descripción antes de guardar
+            if (descripcionText.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Por favor, ingresa una descripción antes de guardar", Toast.LENGTH_LONG).show();
+                return; // Salir del método si no hay descripción
+            }
 
             ContentValues valores = new ContentValues();
 
             valores.put(Transacciones.image, Viewfirma(view));
-            valores.put(Transacciones.descripcion, descripcion.getText().toString());
+            valores.put(Transacciones.descripcion, descripcionText);
 
             Long resultado = db.insert(Transacciones.tabla_firmas, Transacciones.id, valores);
 
-            Toast.makeText(getApplicationContext(), "FIRMA INGRESADA: " + resultado.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "FIRMA REGISTRADA: " + resultado.toString(), Toast.LENGTH_LONG).show();
             descripcion.setText("");
             view.setDrawingCacheEnabled(false);
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static byte[]  Viewfirma(View view5) {
